@@ -101,7 +101,7 @@ int main (int argc,
    gtk_handle_box_set_snap_edge (GTK_HANDLE_BOX (handle), GTK_POS_TOP);
 
    label = gtk_label_new (lname = (g_strdup_printf ("Handle Box")));
-   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, label);
+   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), handle, label);
    g_free(lname);
 
    /* TAB 4: Paned. */
