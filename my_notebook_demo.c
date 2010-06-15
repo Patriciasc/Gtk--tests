@@ -7,13 +7,10 @@
  * # Created by: Patricia Santana Cruz                                  #
  * ######################################################################*/
 
-
-//IMPORTANT: Next and Previos button do still not work
-
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-#define MAX_PAGE 10
+#define MAX_PAGE 9
 #define MIN_PAGE 0
 
 static void previous_tab (GtkButton *button, GtkNotebook *notebook);
@@ -48,7 +45,7 @@ int main (int argc,
                      (gpointer) notebook);
 
    prev_button = gtk_button_new_with_mnemonic ("_Previous");
-   g_signal_connect (G_OBJECT (next_button), "clicked",
+   g_signal_connect (G_OBJECT (prev_button), "clicked",
                      G_CALLBACK (previous_tab), 
                      (gpointer) notebook);
 
@@ -59,15 +56,18 @@ int main (int argc,
 
    for (i=MIN_PAGE; i<=MAX_PAGE; i++)
    {
-      GtkWidget *label, *expander, *exp_label;
+      GtkWidget *label;
+      GtkWidget *expander;
+      GtkWidget *exp_label;
+      gchar *lname;
    
       expander = gtk_expander_new_with_mnemonic ("Click here and discover more...!");
       exp_label = gtk_label_new ("curious like a cat! (o;");
       gtk_container_add (GTK_CONTAINER (expander), exp_label);      
 
-      //XXX freeeee
-      label = gtk_label_new (g_strdup_printf ("Tab%i", i+1));
+      label = gtk_label_new (lname = (g_strdup_printf ("Tab%i", i+1)));
       gtk_notebook_append_page (GTK_NOTEBOOK (notebook), expander, label);
+      g_free(lname);
    }
 
    gtk_notebook_set_scrollable (GTK_NOTEBOOK (notebook), TRUE);
@@ -93,7 +93,7 @@ static void
 previous_tab (GtkButton *button,
               GtkNotebook *notebook)
 {
-   if (c = gtk_notebook_get_current_page (notebook) == MIN_PAGE){
+   if (gtk_notebook_get_current_page (notebook) == MIN_PAGE)
       gtk_notebook_set_current_page (notebook, MAX_PAGE);
    else
       gtk_notebook_prev_page (notebook);
