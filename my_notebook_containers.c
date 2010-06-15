@@ -41,7 +41,7 @@ int main (int argc,
    gtk_init (&argc, &argv);
 
    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_title (GTK_WINDOW (window), "My notebook demo with Container examples");
+   gtk_window_set_title (GTK_WINDOW (window), "GtkContainer examples");
    gtk_container_set_border_width (GTK_CONTAINER (window), 10);
    gtk_widget_set_size_request (window, 400, 300);
    g_signal_connect (G_OBJECT (window), "destroy",
@@ -66,7 +66,8 @@ int main (int argc,
 
    
    /* TAB 1: Expander. */
-   expander = gtk_expander_new_with_mnemonic ("Click here and discover what an exapander can do...!");
+   expander = gtk_expander_new_with_mnemonic ("Click here and discover 
+                                               what an exapander can do...!");
    exp_label = gtk_label_new ("curious like a cat! (o;");
    gtk_container_add (GTK_CONTAINER (expander), exp_label);      
 
@@ -96,7 +97,8 @@ int main (int argc,
    hlabel = gtk_label_new ("Free me from this small space!!");
    gtk_container_add (GTK_CONTAINER (handle), hlabel);
 
-   gtk_handle_box_set_shadow_type (GTK_HANDLE_BOX (handle), GTK_SHADOW_ETCHED_IN);
+   gtk_handle_box_set_shadow_type (GTK_HANDLE_BOX (handle),
+                                   GTK_SHADOW_ETCHED_IN);
    gtk_handle_box_set_handle_position (GTK_HANDLE_BOX (handle), GTK_POS_LEFT);
    gtk_handle_box_set_snap_edge (GTK_HANDLE_BOX (handle), GTK_POS_TOP);
 
