@@ -14,6 +14,8 @@
 
 static void previous_tab (GtkButton *button, GtkNotebook *notebook);
 static void next_tab (GtkButton *button, GtkNotebook *notebook);
+static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
+                                GtkLabel *label);
 
 int main (int argc,
           char *argv[])
@@ -36,7 +38,10 @@ int main (int argc,
    GtkWidget *hpaned;
    GtkWidget *button1;
    GtkWidget *button2;
+   GtkWidget *eventbox;
+   GtkWidget *elabel;
    gchar *lname;
+   gint i;
 
    gtk_init (&argc, &argv);
 
@@ -66,8 +71,7 @@ int main (int argc,
 
    
    /* TAB 1: Expander. */
-   expander = gtk_expander_new_with_mnemonic ("Click here and discover 
-                                               what an exapander can do...!");
+   expander = gtk_expander_new_with_mnemonic ("Click here and discover what an exapander can do...!");
    exp_label = gtk_label_new ("curious like a cat! (o;");
    gtk_container_add (GTK_CONTAINER (expander), exp_label);      
 
@@ -124,6 +128,26 @@ int main (int argc,
    label = gtk_label_new (lname = (g_strdup_printf ("Paned")));
    gtk_notebook_append_page (GTK_NOTEBOOK (notebook), hpaned, label);
    g_free(lname);
+   
+   /* Last tabs. Event boxes. */
+   for (i=0; i<=MAX_PAGE-4; i++)
+   {
+      eventbox = gtk_event_box_new ();
+      elabel = gtk_label_new ("Double-Click Me!");
+  
+      gtk_event_box_set_above_child (GTK_EVENT_BOX (eventbox), FALSE);
+      g_signal_connect (G_OBJECT (eventbox), "button_press_event",
+                        G_CALLBACK (button_pressed), (gpointer) elabel);
+      gtk_container_add (GTK_CONTAINER (eventbox), elabel);
+    
+      gtk_widget_set_events (eventbox, GDK_BUTTON_PRESS_MASK);
+      gtk_widget_realize (eventbox);
+      gdk_window_set_cursor (eventbox->window, gdk_cursor_new (GDK_HAND1));
+
+      label = gtk_label_new (lname = (g_strdup_printf ("Event Box %i", i+1)));
+      gtk_notebook_append_page (GTK_NOTEBOOK (notebook), eventbox, label);
+      g_free(lname);
+   }
 
    gtk_notebook_set_scrollable (GTK_NOTEBOOK (notebook), TRUE);
 
@@ -163,4 +187,21 @@ next_tab (GtkButton *button,
       gtk_notebook_set_current_page (notebook, MIN_PAGE);
    else
       gtk_notebook_next_page (notebook);
+}
+
+/* This is called every time a button-press-event occurs on the GtkEventBox. */
+static gboolean 
+button_pressed (GtkWidget *eventbox,
+                GdkEventButton *event,
+                GtkLabel *label)
+{
+   if (event->type == GDK_2BUTTON_PRESS)
+   {
+      const gchar *text = gtk_label_get_text (label);
+      if (text[0] == 'D')
+         gtk_label_set_text (label, "I Was Double-Clicked!");
+      else
+         gtk_label_set_text (label, "Double-Click Me!");
+   }
+   return FALSE;
 }
